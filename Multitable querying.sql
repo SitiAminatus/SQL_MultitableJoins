@@ -86,3 +86,67 @@ FROM film
 	LEFT JOIN film_actor
 		ON film.film_id = film_actor.film_id
 GROUP BY film.title;
+
+
+-- BRIDGING UNRELATED TABLES
+/*To connect 2 tables which not have overlapping column*/
+-- joining FILM and CATEGORY using FILM_CATEGORY as a BRIDGE 
+SELECT film.film_id, film.title, film_category.category_id, name AS 'category'
+FROM film 
+	INNER JOIN film_category
+		ON film.film_id = film_category.film_id
+	INNER JOIN category
+		ON category.category_id = film_category.category_id;
+
+-- ASSIGNMENT BRIDGING
+/*“Customers often ask which films their favorite actors appear in.
+It would be great to have a list of all actors, with each title that they
+appear in. Could you please pull that for me?”*/
+
+
+SELECT actor.first_name, actor.last_name, film.title
+FROM actor 
+	INNER JOIN film_actor
+		ON actor.actor_id = film_actor.actor_id
+	INNER JOIN film
+		ON film_actor.film_id = film.film_id;
+
+-- Multi-condition Joins
+/*having a condition / filter in multi-table
+example below*/
+
+SELECT film.film_id, film.title, film.rating, category.name
+FROM film
+	INNER JOIN film_category
+		ON film.film_id = film_category.film_id
+	INNER JOIN category
+		ON film_category.category_id = category.category_id
+WHERE category.name = 'horror'
+ORDER BY film_id;
+
+-- OR THIS CODE
+SELECT film.film_id, film.title, film.rating, category.name
+FROM film
+	INNER JOIN film_category
+		ON film.film_id = film_category.film_id
+	INNER JOIN category
+		ON film_category.category_id = category.category_id
+        AND category.name = 'horror'
+ORDER BY film_id;
+
+/*2 queries above give the same result but different time processing. the second code will give faster processing time because it will run in one process include the condition
+whereas the first code takes 2 process (first = pull all category name, second =  pull only horror category) */
+
+
+-- MULTI-CONDITION JOINS ASSIGNMENT
+/*“The Manager from Store 2 is working on expanding our film collection there. 
+Could you pull a list of distinct titles and their descriptions, currently
+available in inventory at store 2?”*/
+
+-- The query below is my solution as an example of BRIDGING implementation AND MULTI-CONDITION JOINS
+SELECT DISTINCT film.title, film_text.description -- although description is appear in film table, but I insist to use film_text table to implement muti-condition join
+FROM film_text 
+	INNER JOIN film
+INNER JOIN inventory
+	ON inventory.film_id = film.film_id
+	AND store_id = '2'; 
