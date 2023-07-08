@@ -113,7 +113,7 @@ FROM actor
 
 -- Multi-condition Joins
 /*having a condition / filter in multi-table
-example below*/
+example below: */
 
 SELECT film.film_id, film.title, film.rating, category.name
 FROM film
@@ -124,7 +124,7 @@ FROM film
 WHERE category.name = 'horror'
 ORDER BY film_id;
 
--- OR THIS CODE
+-- OR THIS CODE (below is the example of multi-condition where we have ON and AND condition)
 SELECT film.film_id, film.title, film.rating, category.name
 FROM film
 	INNER JOIN film_category
@@ -144,9 +144,13 @@ Could you pull a list of distinct titles and their descriptions, currently
 available in inventory at store 2?”*/
 
 -- The query below is my solution as an example of BRIDGING implementation AND MULTI-CONDITION JOINS
-SELECT DISTINCT film.title, film_text.description -- although description is appear in film table, but I insist to use film_text table to implement muti-condition join
+SELECT DISTINCT film.title, film_text.description, inventory.store_id -- although description is appear in film table, but I insist to use film_text table to implement muti-condition join
 FROM film_text 
 	INNER JOIN film
-INNER JOIN inventory
-	ON inventory.film_id = film.film_id
-	AND store_id = '2'; 
+		ON film.title = film_text.title
+	INNER JOIN inventory
+		ON inventory.film_id = film.film_id
+		AND store_id = 2; 
+    
+
+    
