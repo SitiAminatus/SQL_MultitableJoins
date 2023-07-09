@@ -151,6 +151,40 @@ FROM film_text
 	INNER JOIN inventory
 		ON inventory.film_id = film.film_id
 		AND store_id = 2; 
-    
+        
+        
+-- UNION 
+/*another way to combine 2 tables instead of utilize JOIN operator
+Need to be considered:
+1. number of column from both tables is same
+2. the column order is same
+3. each column has similar data types (INT, STR, STR from table 1 AND INT, STR, STR from table 2) */
+SELECT email, first_name, last_name
+FROM staff; -- has 2 staff
+
+SELECT DISTINCT email, first_name, last_name
+FROM customer; -- has 599 customers
+
+-- Let's join/merge these two SELECT statements by utilizing UNION
+
+SELECT email, first_name, last_name, 'staff' as type -- create a new column include the value
+FROM staff
+UNION
+SELECT email, first_name, last_name, 'customer' as type -- same 
+FROM customer
+LIMIT 4; -- limit operator is owned by the whole query not for the last statement
+
+-- LIMIT ASSIGNMENT
+/*“We will be hosting a meeting with all of our staff and advisors soon.
+Could you pull one list of all staff and advisor names, and include a
+column noting whether they are a staff member or advisor? Thanks!”*/
+
+-- first_name, last_name, type
+
+SELECT first_name, last_name, 'staff' AS type
+FROM staff
+UNION
+SELECT first_name, last_name, 'advisor' AS type
+FROM advisor
 
     
